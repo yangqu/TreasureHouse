@@ -27,7 +27,34 @@ class Model(torch.nn.Module):
         return x
 
 
-def main():
+def test():
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
+         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
+    data_test = datasets.MNIST(root="./data", transform=transform, train=False)
+    data_loader_test = torch.utils.data.DataLoader(dataset=data_test, batch_size=64, shuffle=True)
+    filepath = os.path.join('./model/', 'checkpoint_model_epoch_{}.pth.tar'.format(1))
+    model = Model()
+    if torch.cuda.is_available():
+        model.cuda()  # 将所有的模型参数移动到GPU上
+    checkpoint = torch.load(filepath)
+    model.load_state_dict(checkpoint)
+    testing_correct = 0
+    num = 0
+    for data in data_loader_test:
+        X_test, y_test = data
+        num += 1
+        # 有GPU加下面这行，没有不用加
+        # X_test, y_test = X_test.cuda(), y_test.cuda()
+        X_test, y_test = Variable(X_test), Variable(y_test)
+        outputs = model(X_test)
+        _, pred = torch.max(outputs, 1)
+        testing_correct += torch.sum(pred == y_test.data)
+        print("correct_count is :{0},test_total is :{1},Test Accuracy is:{2}%"
+              .format(testing_correct, len(data_test), 100.0 * float(testing_correct) / float(len(data_test))))
+
+
+def train():
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Lambda(lambda x:x.repeat(3, 1, 1)), transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
     data_train = datasets.MNIST(root="./data", transform=transform, train=True, download=True)
@@ -92,4 +119,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # train()
+    test()
