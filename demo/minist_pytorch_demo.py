@@ -87,7 +87,7 @@ def main():
                                                                                              data_train),
                                                                                          100 * testing_correct / len(
                                                                                              data_test)))
-        filepath = os.path.join('./data/', 'checkpoint_model_epoch_{}.pth.tar'.format(epoch))
+        filepath = os.path.join('./model/', 'checkpoint_model_epoch_{}.pth.tar'.format(epoch))
         torch.save(model.state_dict(), filepath)
 
 
