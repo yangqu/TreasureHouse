@@ -27,7 +27,7 @@ class Model(torch.nn.Module):
         return x
 
 
-def test():
+def predict():
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Lambda(lambda x: x.repeat(3, 1, 1)),
          transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
@@ -119,5 +119,5 @@ def train():
 
 
 if __name__ == '__main__':
-    # train()
-    test()
+    train()
+    predict()
