@@ -25,14 +25,14 @@ def sortData(df):
     # new column all is the accumulation of brand score every building
     df['all'] = df.apply(lambda x: x.sum(), axis=1)
     # sort the building by column all
-    df.sort_values(by=['all'], ascending=False, inplace=True)
+    df.sort_values(by=['all'], ascending=False, inplace=False)
     print(df)
     return df
 
 
 def pickBuilding(df, building_limit, brand_list):
     # initialize the score array filled zero
-    score = [0] * building_limit
+    score = [0] * brand_list.__len__()
     # initialize the result container set
     building_list_picked = set()
     for indexs in df.index:
@@ -42,6 +42,8 @@ def pickBuilding(df, building_limit, brand_list):
         rowData = rowData.tolist()
         # accumulate the new list to the score
         score = [i + j for i, j in zip(score, rowData)]
+        for x in zip(score, rowData):
+            print(x)
         # add the picked building
         building_list_picked.add(indexs)
         print(score)
