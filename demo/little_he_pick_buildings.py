@@ -38,7 +38,7 @@ class Greedy:
                 ser = ser[ser == max_value]
                 sort = ser.head(max_sample).sample(
                     n=1).index.tolist()[0]
-                print(ser.size)
+                # print(ser.size)
                 add = df_building_brand.ix[sort].values
                 add[-1] = 0
                 remain = [i - j for i, j in zip(remain, add)]
