@@ -73,22 +73,21 @@ if __name__ == '__main__':
                    'building_limit': 5,
                    'plan_numbers': 10
                    }
+
     # transform class to instance
     # 实例化类
     module = Greedy(dict_config)
     # result container
     # 结果容器
     plan_set = set()
-
     # call Greedy.pick in a loop
     # 循环选楼
     for num in range(1, dict_config['plan_numbers']):
-        (result_set, remain) = module.pick()
+        (result_set, remain_set) = module.pick()
         list_result = list(result_set)
         list_result.sort()
-        plan_set.add("方案{0}:{1}; 损失向量:{2}; 楼宇数量: {3}".format(str(num),
-                                                             str(list_result), str(remain), str(result_set.__len__())))
-
+        plan_set.add("方案{0}:{1}; 损失向量:{2}; 楼宇数量: {3}"
+                     .format(str(num), str(list_result), str(remain_set), str(result_set.__len__())))
     print("\n")
-    for colletion in plan_set:
-        print(colletion)
+    for element in plan_set:
+        print(element)
