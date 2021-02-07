@@ -32,8 +32,6 @@ def on_press(key):
             max_space = max(space)
             min_space = min(space)
             if max_space / min_space >= 2.2 or timestamps >= 1.0:
-                # print('space' + str(space))
-                # print('character' + str(character))
                 if len(input) > 0:
                     input = []
                 avg_charater = sum(character) / len(character)
@@ -45,9 +43,13 @@ def on_press(key):
                 character = []
                 space = []
                 code = ''.join(input)
-                print(mtalk.decode(code), end='')
+                format_code = '\033[1;30;46m'+str(mtalk.decode(code))+'\033[0m'
+                print(format_code, end='')
     except:
-        print('Error')
+        print('\n\nThere is typo! Restart~\n')
+        character = []
+        space = []
+        input = []
     return False
 
 
