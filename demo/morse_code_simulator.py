@@ -12,7 +12,7 @@ last_press_time = time.time()
 
 pygame.mixer.init()
 channel = pygame.mixer.Channel(2)
-sound = pygame.mixer.Sound('d:/tmp/663.wav')
+sound = pygame.mixer.Sound('../source/morse.wav')
 
 
 def on_press(key):
