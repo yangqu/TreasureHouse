@@ -31,6 +31,7 @@ def on_press(key):
     global input
     try:
         morse_timer.cancel()
+        morse_space_timer.cancel()
     except NameError:
         pass
     last_press_time = time.time()
@@ -61,13 +62,28 @@ def on_release(key):
     global space
     global input
     global morse_timer
+    global morse_space_timer
     channel.stop()
     last_release_time = time.time()
     timestamps = last_release_time - last_press_time
     character.append(timestamps)
     morse_timer = threading.Timer(1, decoder)
     morse_timer.start()
+    morse_space_timer = threading.Timer(5, plugin_space)
+    morse_space_timer.start()
     return False
+
+
+# plug in space
+def plugin_space():
+    global character
+    global space
+    global input
+    input = []
+    character = []
+    space = []
+    format_code = '\033[1;30;46m' + str(' ') + '\033[0m'
+    print(format_code, end='')
 
 
 # translate morse code into character
