@@ -4,17 +4,25 @@ import morse_talk as mtalk
 import pygame
 import threading
 
+# List Container consists of intervals between press and release
 character = []
+# List Container consists of intervals between release and press
 space = []
+# List Container consists of . and - messages
 input = []
 
+# release time
 last_release_time = time.time()
+# press time
 last_press_time = time.time()
 
+# initialize  sound effect
 pygame.mixer.init()
 channel = pygame.mixer.Channel(2)
 sound = pygame.mixer.Sound('../source/morse.wav')
 
+
+# press listener
 def on_press(key):
     global last_release_time
     global last_press_time
@@ -23,7 +31,7 @@ def on_press(key):
     global input
     try:
         morse_timer.cancel()
-    except:
+    except NameError:
         pass
     last_press_time = time.time()
     if not channel.get_busy():
@@ -36,27 +44,16 @@ def on_press(key):
             max_space = max(space)
             min_space = min(space)
             if max_space / min_space >= 2.2 or timestamps >= 1.0:
-                if len(input) > 0:
-                    input = []
-                avg_charater = sum(character) / len(character)
-                for value in character:
-                    if value / avg_charater >= 2.2 or value >= 0.5:
-                        input.append('-')
-                    else:
-                        input.append('.')
-                character = []
-                space = []
-                code = ''.join(input)
-                format_code = '\033[1;30;46m' + str(mtalk.decode(code)) + '\033[0m'
-                print(format_code, end='')
-    except:
-        print('\n\nThere is typo! Restart~\n')
+                decoder()
+    except NameError:
+        print('\n\nThere is a typo! Restart~\n')
         character = []
         space = []
         input = []
     return False
 
 
+# release listener
 def on_release(key):
     global last_release_time
     global last_press_time
@@ -73,6 +70,7 @@ def on_release(key):
     return False
 
 
+# translate morse code into character
 def decoder():
     global character
     global space
