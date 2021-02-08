@@ -77,9 +77,9 @@ def decoder():
     global input
     if len(input) > 0:
         input = []
-    avg_charater = sum(character) / len(character)
+    average_character = sum(character) / len(character)
     for value in character:
-        if value / avg_charater >= 2.2 or value >= 0.5:
+        if value / average_character >= 2.2 or value >= 0.5:
             input.append('-')
         else:
             input.append('.')
