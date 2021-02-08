@@ -111,6 +111,7 @@ def decoder():
         space = []
         input = []
 
+
 def main():
     while 1:
         with keyboard.Listener(
