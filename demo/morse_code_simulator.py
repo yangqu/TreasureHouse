@@ -2,6 +2,7 @@ from pynput import keyboard
 import time
 import morse_talk as mtalk
 import pygame
+import threading
 
 character = []
 space = []
@@ -14,13 +15,16 @@ pygame.mixer.init()
 channel = pygame.mixer.Channel(2)
 sound = pygame.mixer.Sound('../source/morse.wav')
 
-
 def on_press(key):
     global last_release_time
     global last_press_time
     global character
     global space
     global input
+    try:
+        morse_timer.cancel()
+    except:
+        pass
     last_press_time = time.time()
     if not channel.get_busy():
         channel.play(sound)
@@ -43,7 +47,7 @@ def on_press(key):
                 character = []
                 space = []
                 code = ''.join(input)
-                format_code = '\033[1;30;46m'+str(mtalk.decode(code))+'\033[0m'
+                format_code = '\033[1;30;46m' + str(mtalk.decode(code)) + '\033[0m'
                 print(format_code, end='')
     except:
         print('\n\nThere is typo! Restart~\n')
@@ -56,11 +60,36 @@ def on_press(key):
 def on_release(key):
     global last_release_time
     global last_press_time
+    global character
+    global space
+    global input
+    global morse_timer
     channel.stop()
     last_release_time = time.time()
     timestamps = last_release_time - last_press_time
     character.append(timestamps)
+    morse_timer = threading.Timer(1, decoder)
+    morse_timer.start()
     return False
+
+
+def decoder():
+    global character
+    global space
+    global input
+    if len(input) > 0:
+        input = []
+    avg_charater = sum(character) / len(character)
+    for value in character:
+        if value / avg_charater >= 2.2 or value >= 0.5:
+            input.append('-')
+        else:
+            input.append('.')
+    character = []
+    space = []
+    code = ''.join(input)
+    format_code = '\033[1;30;46m' + str(mtalk.decode(code)) + '\033[0m'
+    print(format_code, end='')
 
 
 def main():
