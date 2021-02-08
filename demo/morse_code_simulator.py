@@ -91,20 +91,25 @@ def decoder():
     global character
     global space
     global input
-    if len(input) > 0:
+    try:
+        if len(input) > 0:
+            input = []
+        average_character = sum(character) / len(character)
+        for value in character:
+            if value / average_character >= 2.2 or value >= 0.5:
+                input.append('-')
+            else:
+                input.append('.')
+        character = []
+        space = []
+        code = ''.join(input)
+        format_code = '\033[1;30;46m' + str(mtalk.decode(code)) + '\033[0m'
+        print(format_code, end='')
+    except KeyError:
+        print('\n\nThere is a typo! Restart~\n')
+        character = []
+        space = []
         input = []
-    average_character = sum(character) / len(character)
-    for value in character:
-        if value / average_character >= 2.2 or value >= 0.5:
-            input.append('-')
-        else:
-            input.append('.')
-    character = []
-    space = []
-    code = ''.join(input)
-    format_code = '\033[1;30;46m' + str(mtalk.decode(code)) + '\033[0m'
-    print(format_code, end='')
-
 
 def main():
     while 1:
